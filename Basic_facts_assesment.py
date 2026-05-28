@@ -1,46 +1,8 @@
 # Main routine
-print()
-print("👨‍🏫👨‍🏫 Welcome to my math quiz👨‍🏫👨‍🏫")
-print()
+print("👨‍🏫👨‍🏫 Welcome to my math quiz 👨‍🏫👨‍🏫")
 
-def yes_no(question):
-    """check user response to a question is yes / no (y/n), returns 'yes' or 'no' """
+import random
 
-    while True:
-
-        response = input(question).lower()
-
-        # check the user says yes / no / y/ n
-        if response == "yes" or response == "y":
-            return "yes"
-        elif response == "no" or response == "n":
-            return "no"
-        else:
-            print("please enter yes / no")
-
-def make_statement (statement, decoration):
-    """Adds emoji / additional characters"""
-
-    ends = decoration * 3
-    print(f"\n{ends} {statement} {ends}")
-
-def instruction():
-    """print instructions"""
-
-    make_statement("Instructions", "ℹ️")
-
-    print("""
-    
-Choose Plus / Minus / Divide / Times and try to win
-    """)
-
-# Main routine starts here
-
-# Initialise game variables
-mode = "regular"
-rounds_played = 0
-
-basic_facts = ("Plus", "Minus", "Divide", "Times", "xxx")
 
 def string_checker(question, valid_ans=('yes', 'no')):
 
@@ -48,116 +10,123 @@ def string_checker(question, valid_ans=('yes', 'no')):
 
     while True:
 
-
-        # Get user response and make sure its lowercase
         user_response = input(question).lower()
 
         for item in valid_ans:
-            # check if the user response is a word in the list
+
             if item == user_response:
                 return item
 
-
-            # check if the user response is the same as
-            # the first letter of an item in the list
             elif user_response == item[0]:
                 return item
-
 
         print(error)
         print()
 
-# Game Variables
-basic_facts = ("plus", "minus", "divide", "times")
 
-# Ask user if they want to see the instructions
+def make_statement(statement, decoration):
+
+    ends = decoration * 3
+    print(f"\n{ends} {statement} {ends}")
+
+
+def instruction():
+
+    make_statement("Instructions", "ℹ️")
+
+    print("""
+Choose Plus / Minus / Divide / Times and try to win
+    """)
+
+def get_number(question):
+
+    while True:
+
+        response = input(question).lower()
+
+        if response == "xxx":
+            print("You stopped the game")
+            exit()
+
+        try:
+            return int(response)
+
+        except ValueError:
+            print("Please enter a number or 'xxx' to quit.")
+
+
+# Game Variables
+basic_facts = ("plus", "minus", "divide", "times", "xxx")
+
 want_instructions = string_checker("Do you want to see the instructions? ")
 
-# Display the instructions if the user wants to see them...
 if want_instructions == "yes":
     instruction()
 
-print(f"you chose {want_instructions}")
+print(f"You chose {want_instructions}")
 
 user_choice = string_checker("Choose: ", basic_facts)
-print("You chose: ", user_choice)
+print("You chose:", user_choice)
 
-import random
+if user_choice == "xxx":
+    exit()
 
-# Score variables
 score = 0
 questions_asked = 5
+game_history = []
 
-# Ask questions
 for question in range(questions_asked):
 
-    # Generate random numbers
     num_1 = random.randint(1, 12)
     num_2 = random.randint(1, 12)
 
-    # Plus
     if user_choice == "plus":
         answer = num_1 + num_2
-        user_answer = int(input(f"What is {num_1} + {num_2}? "))
+        user_answer = get_number(f"What is {num_1} + {num_2}? ")
 
-    # Minus
     elif user_choice == "minus":
         answer = num_1 - num_2
-        user_answer = int(input(f"What is {num_1} - {num_2}? "))
+        user_answer = get_number(f"What is {num_1} - {num_2}? ")
 
-    # Times
     elif user_choice == "times":
         answer = num_1 * num_2
-        user_answer = int(input(f"What is {num_1} x {num_2}? "))
+        user_answer = get_number(f"What is {num_1} x {num_2}? ")
 
-    # Divide
     else:
-        # Make division questions divide evenly
         answer = random.randint(1, 12)
         num_2 = random.randint(1, 12)
         num_1 = answer * num_2
 
-        user_answer = int(input(f"What is {num_1} ÷ {num_2}? "))
+        user_answer = get_number(f"What is {num_1} ÷ {num_2}? ")
 
-    # Check answer
     if user_answer == answer:
         print("Correct! ✅")
         score += 1
+        game_history.append("Correct ✅")
+
     else:
         print(f"Wrong ❌ The answer was {answer}")
+        game_history.append(f"Wrong ❌ (Answer: {answer})")
 
-    print()
+print(f"\nYou got {score} out of {questions_asked} correct!")
 
-# Final score
-print(f"You got {score} out of {questions_asked} correct!")
+see_history = string_checker("\nDo you want to see your game history? ")
 
-# Game History / Statistics area
+if see_history == "yes":
 
-# check users have played at least one round before calculating statistics!
-if rounds_played > 0:
+    make_statement("Game History", "=")
 
-    # Calculate Statistics
-    questions_correct = score
-    questions_wrong = questions_asked - score
+    for i in range(len(game_history)):
+        print(f"Question {i + 1}: {game_history[i]}")
 
-    percent_correct = questions_correct - score
-    percent_wrong = questions_wrong / questions_asked
+questions_correct = score
+questions_wrong = questions_asked - score
 
-    # Output Game Statistics
-    print("💎💎💎 Game Statistics 💎💎💎")
-    print (f"👍 Won: {questions_correct:.2f} \t "
-           f"😭 Lost: {questions_wrong:.2f} \t "
-           f"👔 Tied: {questions_asked:.2f}")
+percent_correct = (questions_correct / questions_asked) * 100
+percent_wrong = (questions_wrong / questions_asked) * 100
 
-    # ask user if they want to see their game history and output it if requested.
-    see_history = string_checker("\nDo you want to see your game history? ")
-    if see_history == "yes":
-
-        make_statement("Game History", "=")
-
-        for item in game_history:
-            print(item)
-
-        print()
-        print("Thanks for playing.")
-
+print("\n💎💎💎 Game Statistics 💎💎💎")
+print(f"👍 Correct: {questions_correct}")
+print(f"😭 Incorrect: {questions_wrong}")
+print(f"🎯 Percent Correct: {percent_correct:.2f}%")
+print(f"📉 Percent Wrong: {percent_wrong:.2f}%")
