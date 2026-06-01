@@ -29,6 +29,7 @@ def make_statement(statement, decoration):
     ends = decoration * 3
     print(f"\n{ends} {statement} {ends}")
 
+# ask user to choose an equation or press xxx to quit
 
 def instruction():
 
@@ -54,6 +55,7 @@ def get_number(question):
         except ValueError:
             print("Please enter a number or 'xxx' to quit.")
 
+# ask if user wants to see the instructions
 
 # Game Variables
 basic_facts = ("plus", "minus", "divide", "times", "xxx")
@@ -76,6 +78,8 @@ questions_asked = 5
 game_history = []
 
 for question in range(questions_asked):
+
+# Equations for the quiz
 
     num_1 = random.randint(1, 12)
     num_2 = random.randint(1, 12)
@@ -110,7 +114,9 @@ for question in range(questions_asked):
 
 print(f"\nYou got {score} out of {questions_asked} correct!")
 
-see_history = string_checker("\nDo you want to see your game history? ")
+# Show quiz history if asked for
+
+see_history = string_checker("\nDo you want to see your quiz history? ")
 
 if see_history == "yes":
 
